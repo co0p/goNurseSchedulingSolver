@@ -4,8 +4,8 @@ import (
 	ga "github.com/tomcraven/goga"
 )
 
-type BitSetInitializer struct{}
+type RosterInitializer struct{}
 
-func (BitSetInitializer) Go() ga.Bitset {
+func (RosterInitializer) Go() ga.Bitset {
 	panic("implement me")
 }

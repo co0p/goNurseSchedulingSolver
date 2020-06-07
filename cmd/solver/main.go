@@ -13,9 +13,9 @@ func main() {
 	var populationSize = 100
 
 	algorithm := ga.NewGeneticAlgorithm()
-	algorithm.Simulator = &goNurseSchedulingSolver.FitnessSimulator{}
-	algorithm.BitsetCreate = &goNurseSchedulingSolver.BitSetInitializer{}
-	algorithm.EliteConsumer = &goNurseSchedulingSolver.EliteConsumer{}
+	algorithm.Simulator = goNurseSchedulingSolver.NewRosterSimulation(31, 5)
+	algorithm.BitsetCreate = &goNurseSchedulingSolver.RosterInitializer{}
+	algorithm.EliteConsumer = &goNurseSchedulingSolver.RosterGenomeConsumer{}
 
 	algorithm.Mater = ga.NewMater(
 		[]ga.MaterFunctionProbability{

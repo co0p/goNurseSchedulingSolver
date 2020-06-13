@@ -18,30 +18,66 @@ Nurse Scheduling Problem
 Approach
 --------
 
-This program attempts to find a monthly roster that fits the requirements of a 
-department (a) and the individual wishes of the employees regarding holidays 
-and such (b).
+This program attempts to find a roster that fits the requirements of a 
+department (a) and tries to find a balanced shift assignment between the employees(b).
 
 The genetic algorithm works by mutating genomes that are then ranked by 
 their fitness. The higher the fitness the better the current genome matches 
 the given criteria. The genomes with the highest fitness is also called elite. 
 After a given amount of genetic evolutions the algorithm finishes.  
 
+Modelling a roster as a bitset
+------------------------------
 
+- P = n employees (P1, P2, ... Pn)
+- D = m days (D1, D2, ... Dm)
+- S = given 3 shift types modelled as the following bits
+    - S1 = Morning shift ```[0,0]```
+    - S2 = Late shift   ```[0,1]```
+    - S3 = Night shift  ```[1,0]```
+
+A roster is a function of R(P, D, S) which generates a shift assignment:
+
+     Roster           | Day 1           | Day 2           | Day 3
+    +----------------------------------------------------------------------+
+     employyee        |  P1   P2   P3   |  P1   P2   P3   |  P1   P2   P3
+     random shift     |  S1   S2   S3   |  S2   S3   S1   |  S3   S1   S2
+    +----------------------------------------------------------------------+
+    resulting bitset  = [0,0][0,1][1,0]   [0,1][1,0][0,0]   [1,0][0,0][0,1]
+
+The genetic algorithm will try to find a random shift assignment that satisfies the 
+requirements.
+ 
 Modelling the requirements
 --------------------------
 
 __Department requirements__
 
-For each day the department has a few requirements such as:
- * staff count working in the morning 
- * staff count working in the afternoon
- * staff count working at night
+Every day there is a Morning, Late and Night shift. There must be at least on employee 
+assigned to each shift for each day. Multiple employee assignments are allowed.
 
+```Sum(Dn, Sm) >= 1```
+
+Given the resulting bitset from example above, this requirement is true for all n,m:
+    
+    SUM(D1, S1) = 1         SUM(D2, S1) = 1         SUM(D3, S1) = 1
+    SUM(D1, S2) = 1         SUM(D2, S2) = 1         SUM(D3, S2) = 1
+    SUM(D1, S3) = 1         SUM(D2, S3) = 1         SUM(D3, S3) = 1
+    
 __Employee requirement__
 
-Each employee has the following requirements
- * working hours of one employee must not exceed 40 hours
- * on holidays the employee must not be scheduled to work
+For a given roster the distribution of work for the employees should be equally distributed.
+It is ok of there is a slight variation (+,- tbd) regarding the distribution of work.
+
+```SUMx(Px,Sm) ~ SUMy(Py,Sm), x,y=1..n, x!=y```
  
+Given the resulting bitset from the example above, this requirement is true, because
+all employees work the same amount of shifts for the roster of 3 days.
+ 
+    SUM1(P1,S1) = 3 ~ SUM1(P2,S1) = 3 ~ SUM1(P3,S1) = 3 
+    SUM1(P1,S2) = 3 ~ SUM1(P2,S2) = 3 ~ SUM1(P3,S2) = 3 
+    SUM1(P1,S3) = 3 ~ SUM1(P2,S3) = 3 ~ SUM1(P3,S3) = 3 
+
 __the fitness function__
+
+TODO

@@ -1,52 +1,57 @@
-package goNurseSchedulingSolver
+package main
 
 import (
+	"fmt"
 	ga "github.com/tomcraven/goga"
-	"log"
+	"math/rand"
 )
 
-type Employee struct {
-	maxHours int
-}
-
-func NewEmployee() Employee {
-	return Employee{
-		maxHours: 40,
-	}
-}
-
-type Assignment struct {
-	Employee Employee
-	Shift    ShiftType
-}
-
-type Schedule struct {
-	weekDay     int
-	assignments []Assignment
-}
-
 type RosterSimulation struct {
-	roster Roster
+	simulationCount     int
+	NumberOfSimulations int
+	NumberOfEmployees   int
+	NumberOfDays        int
+	PopulationSize      int
 }
 
-func NewRosterSimulation(days int, employeeCount int) *RosterSimulation {
-	return &RosterSimulation{
-		roster: NewRoster(employeeCount, days),
+// Go initializes a random roster
+func (r RosterSimulation) Go() ga.Bitset {
+	size := r.NumberOfDays * r.NumberOfEmployees * 3
+	bitset := ga.Bitset{}
+	bitset.Create(size)
+	for i := 0; i < size; i++ {
+		bitset.Set(i, rand.Intn(2))
+	}
+	return bitset
+}
+
+func (r *RosterSimulation) OnBeginSimulation() {
+	fmt.Println("begin simulation")
+	r.simulationCount++
+	if r.NumberOfSimulations < 1 {
+		panic("NumberOfSimulations must be greater than 0")
 	}
 }
 
-func (s *RosterSimulation) OnBeginSimulation() {
-	log.Printf("Begin Simulation")
+// Simulate assigns a fitness value to the given genome
+func (r *RosterSimulation) Simulate(genome *ga.IGenome) {
+	fmt.Println("simulate ", genome)
+
+	roster := NewRoster(*genome, r.NumberOfEmployees, r.NumberOfDays)
+	fitness := roster.GetFitness()
+	(*genome).SetFitness(fitness)
 }
 
-func (s *RosterSimulation) Simulate(genome *ga.IGenome) {
-	panic("implement me")
+// OnElite prints the current elite on every simulation interation
+func (r *RosterSimulation) OnElite(genome *ga.IGenome) {
+	roster := NewRoster(*genome, r.NumberOfEmployees, r.NumberOfDays)
+	fmt.Printf("[%d]", r.simulationCount)
+	roster.PrintSchedule()
 }
 
-func (s *RosterSimulation) OnEndSimulation() {
-	log.Printf("Begin Simulation")
+// ExitFunc defines when to stop the simulation
+func (r *RosterSimulation) ExitFunc(genome *ga.IGenome) bool {
+	return r.simulationCount >= r.NumberOfSimulations
 }
 
-func (s *RosterSimulation) ExitFunc(genome *ga.IGenome) bool {
-	panic("implement me")
-}
+func (r *RosterSimulation) OnEndSimulation() {}

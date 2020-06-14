@@ -74,10 +74,22 @@ It is ok of there is a slight variation (+,- tbd) regarding the distribution of 
 Given the resulting bitset from the example above, this requirement is true, because
 all employees work the same amount of shifts for the roster of 3 days.
  
-    SUM1(P1,S1) = 3 ~ SUM1(P2,S1) = 3 ~ SUM1(P3,S1) = 3 
-    SUM1(P1,S2) = 3 ~ SUM1(P2,S2) = 3 ~ SUM1(P3,S2) = 3 
-    SUM1(P1,S3) = 3 ~ SUM1(P2,S3) = 3 ~ SUM1(P3,S3) = 3 
+    m=1, SUM1(P1,S1) = 3 ~ SUM2(P2,S1) = 3 ~ SUM3(P3,S1) = 3 
+    m=2, SUM1(P1,S2) = 3 ~ SUM2(P2,S2) = 3 ~ SUM3(P3,S2) = 3 
+    m=3, SUM1(P1,S3) = 3 ~ SUM2(P2,S3) = 3 ~ SUM3(P3,S3) = 3 
 
 __the fitness function__
 
-TODO
+The fitness function F(R) for a given roster R is being used to rank the chromosomes against each other. 
+The higher the value, the better the chromosome. In our example we have two different kinds of rules:
+
+
+F1(R): hard rule
+ 
+- If the department's requirement are not met, the chromosome should not be considered at all ```F1(R) = 0```, otherwise ```F1(R) = 1```.
+  
+F2(R): soft rule
+
+- Equal distribution of shift assignment should be rewarded, the more unbalanced the assignment, the lower the fitness value.
+
+The final fitness function is ```F(R) = F1(R) * F2(R) ```

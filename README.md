@@ -1,7 +1,8 @@
 Nurse Scheduling Solver written in Go
 =====================================
 
-__solving the nurse scheduling problem using a genetic algorithm approach using go__
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+solving the nurse scheduling problem using a genetic algorithm approach using go
 
 Nurse Scheduling Problem
 ------------------------

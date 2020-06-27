@@ -14,26 +14,56 @@ const (
 	SHIFT_NIGHT
 )
 
+type Assignment struct {
+	employee int
+	shifts   []ShiftType
+}
+
 type Roster struct {
 	NumberOfDays      int
 	NumberOfEmployees int
 	ShiftTypes        []ShiftType
-	genome            ga.IGenome
+	schedule          []Assignment
 }
 
 func NewRoster(genome ga.IGenome, employees int, days int) *Roster {
-	return &Roster{
+	r := &Roster{
 		NumberOfEmployees: employees,
 		NumberOfDays:      days,
-		genome:            genome,
+		schedule:          []Assignment{},
 	}
+	// for each employee go over the bitset and extract the current shift assigment for the whole period of time
+	bits := genome.GetBits()
+	for i := 0; i < employees; i++ {
+		assignment := Assignment{
+			employee: i,
+			shifts:   []ShiftType{},
+		}
+		for idx := i; idx < bits.GetSize(); idx += employees {
+			chromosome := bits.Get(idx)
+			shift := ShiftType(chromosome)
+			assignment.shifts = append(assignment.shifts, shift)
+		}
+		r.schedule = append(r.schedule, assignment)
+	}
+
+	return r
 }
 
 func (r Roster) GetFitness() int {
-	fmt.Println("todo")
+
+	// TODO calculate fitness or r's schedule
+
 	return 0
 }
 
 func (r Roster) PrintSchedule() {
-	fmt.Println("todo")
+
+	for _, s := range r.schedule {
+		fmt.Printf("%d\t: ", s.employee)
+		for _, a := range s.shifts {
+			fmt.Printf("%d | ", a)
+		}
+		fmt.Printf("\n")
+	}
 }

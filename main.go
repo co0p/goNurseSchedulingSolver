@@ -13,7 +13,7 @@ func main() {
 		NumberOfSimulations: 100,
 		PopulationSize:      20,
 		NumberOfEmployees:   3,
-		NumberOfDays:        31,
+		NumberOfDays:        3,
 	}
 
 	// mater defines how to combine genomes

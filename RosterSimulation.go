@@ -26,7 +26,6 @@ func (r RosterSimulation) Go() ga.Bitset {
 }
 
 func (r *RosterSimulation) OnBeginSimulation() {
-	fmt.Println("begin simulation")
 	r.simulationCount++
 	if r.NumberOfSimulations < 1 {
 		panic("NumberOfSimulations must be greater than 0")
@@ -35,8 +34,6 @@ func (r *RosterSimulation) OnBeginSimulation() {
 
 // Simulate assigns a fitness value to the given genome
 func (r *RosterSimulation) Simulate(genome *ga.IGenome) {
-	fmt.Println("simulate ", genome)
-
 	roster := NewRoster(*genome, r.NumberOfEmployees, r.NumberOfDays)
 	fitness := roster.GetFitness()
 	(*genome).SetFitness(fitness)
@@ -45,7 +42,7 @@ func (r *RosterSimulation) Simulate(genome *ga.IGenome) {
 // OnElite prints the current elite on every simulation interation
 func (r *RosterSimulation) OnElite(genome *ga.IGenome) {
 	roster := NewRoster(*genome, r.NumberOfEmployees, r.NumberOfDays)
-	fmt.Printf("[%d]", r.simulationCount)
+	fmt.Printf("** [%d] simulation **\n", r.simulationCount)
 	roster.PrintSchedule()
 }
 
